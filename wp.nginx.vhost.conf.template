@@ -1,0 +1,37 @@
+server {
+	
+	listen 80;
+	server_name @@HOSTNAME@@ www.@@HOSTNAME@@;
+	root @@PATH@@;
+
+  	index index.php index.html;
+
+  
+	access_log @@LOG_PATH@@/access.log;
+	error_log @@LOG_PATH@@/error.log;
+	
+	
+
+	location / {
+			try_files $uri $uri/ /index.php$uri?$args;
+	}
+	
+	
+	location ~ "^(.+\.php)($|/)" {
+        fastcgi_split_path_info ^(.+\.php)(.*)$;
+ 
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+		fastcgi_param SERVER_NAME $host;
+		fastcgi_pass unix:/var/run/php5-fpm-@@SOCKET@@.sock;
+        include fastcgi_params;
+    }
+
+
+        include global/restrictions.conf;
+
+        # Additional rules go here.
+
+        include global/wordpress.conf;
+}
