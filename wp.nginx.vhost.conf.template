@@ -33,5 +33,4 @@ server {
 
         # Additional rules go here.
 
-        include global/wordpress.conf;
 }
